@@ -140,3 +140,19 @@ test('test5:complete function', t => {
                'You earned 47 credits \n');
 });
 
+test('test6:empty invoice.performances', t => {
+  //given
+  const invoice = {
+                    'customer': 'BigCo',
+                    'performances': []
+                  };
+
+  //when
+  const result = statement(invoice, plays);
+
+  //then
+  t.is(result, 'Statement for BigCo\n' +
+               'Amount owed is $0.00\n' +
+               'You earned 0 credits \n');
+});
+
