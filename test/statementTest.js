@@ -156,3 +156,31 @@ test('test6:empty invoice.performances', t => {
                'You earned 0 credits \n');
 });
 
+test('test7:unknown type of performance', t => {
+    //given
+      const plays = {
+        'othello': {
+          'name': 'Othello',
+          'type': 'tragedy1',
+        },
+      };
+      const invoice = {
+          'customer': 'BigCo',
+          'performances': [
+            {
+              'playID': 'othello',
+              'audience': 10,
+            },
+          ],
+        };
+
+
+      //when
+      try{
+        statement(invoice, plays);
+        t.fail()
+      }catch(e) {
+      //then
+        t.is(e.message, 'unknown type: tragedy1');
+      }
+})
