@@ -37,21 +37,39 @@ function calculateCredit(type, audience){
     return credit;
 }
 
+function createData(invoice, plays) {
+    let totalAmount = 0;
+    let volumeCredits = 0;
+    let performanceList = new Array();
+    for (let performance of invoice.performances) {
+        const play = plays[performance.playID];
+        let thisAmount = calculateAmount(play.type, performance);
+        volumeCredits += calculateCredit(play.type, performance.audience);
+        totalAmount += thisAmount;
+        performanceList.push({
+            name: play.name,
+            amount: thisAmount,
+            audience: performance.audience
+        })
+      }
+    let data = {
+            customer: invoice.customer,
+            totalAmount: totalAmount,
+            volumeCredits: volumeCredits,
+            performanceList: performanceList
+        };
+    return data;
+}
+
 function statement (invoice, plays) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`;
   const USDformat = getUSDFormat();
-  for (let performance of invoice.performances) {
-    const play = plays[performance.playID];
-    let thisAmount = calculateAmount(play.type, performance);
-    volumeCredits += calculateCredit(play.type, performance.audience);
-    //print line for this order
-    result += ` ${play.name}: ${USDformat(thisAmount / 100)} (${performance.audience} seats)\n`;
-    totalAmount += thisAmount;
+  let data = createData(invoice, plays);
+  let result = `Statement for ${data.customer}\n`;
+  for (let performance of data.performanceList) {
+    result += ` ${performance.name}: ${USDformat(performance.amount / 100)} (${performance.audience} seats)\n`;
   }
-  result += `Amount owed is ${USDformat(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
+  result += `Amount owed is ${USDformat(data.totalAmount / 100)}\n`;
+  result += `You earned ${data.volumeCredits} credits \n`;
   return result;
 }
 
