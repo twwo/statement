@@ -115,3 +115,26 @@ test('test3:comedy and audience > 20', t => {
                    'Amount owed is $468.00\n' +
                    'You earned 4 credits \n');
 })
+
+test('test4:comedy and audience <= 20', t => {
+    //given
+      const invoice = {
+                        'customer': 'BigCo',
+                        'performances': [
+                          {
+                            'playID': 'as-like',
+                            'audience': 20,
+                          }
+                        ],
+                      };
+
+
+      //when
+      const result = statement(invoice, plays);
+
+      //then
+      t.is(result, 'Statement for BigCo\n' +
+                   ' As You Like It: $360.00 (20 seats)\n' +
+                   'Amount owed is $360.00\n' +
+                   'You earned 4 credits \n');
+})
