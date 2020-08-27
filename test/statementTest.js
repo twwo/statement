@@ -1,5 +1,5 @@
 const test = require('ava');
-const {statement} = require('../src/statement');
+const {statement, htmlStatement} = require('../src/statement');
 const plays = {
                       'hamlet': {
                         'name': 'Hamlet',
@@ -206,7 +206,7 @@ test('test8:html format complete function', t => {
                         };
 
       //when
-        const result = statement(invoice, plays);
+        const result = htmlStatement(invoice, plays);
 
       //then
         t.is(result, '<h1>Statement for BigCo</h1>\n' +

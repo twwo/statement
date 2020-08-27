@@ -71,6 +71,19 @@ function getTEXTResult(data, format){
     return result;
 }
 
+function getHTMLResult(data, format){
+    let result = `<h1>Statement for ${data.customer}</h1>\n` +
+                '<table>\n' +
+                '<tr><th>play</th><th>seats</th><th>cost</th></tr>';
+    for (let performance of data.performanceList) {
+        result += ` <tr><td>${performance.name}</td><td>${performance.audience}</td><td>${format(performance.amount / 100)}</td></tr>\n`;
+    }
+    result += '</table>\n' +
+              `<p>Amount owed is <em>${format(data.totalAmount / 100)}</em></p>\n` +
+              `<p>You earned <em>${data.volumeCredits}</em> credits</p>\n`;
+    return result;
+}
+
 function statement (invoice, plays) {
   const USDformat = getUSDFormat();
   let data = createData(invoice, plays);
@@ -78,6 +91,14 @@ function statement (invoice, plays) {
   return result;
 }
 
+function htmlStatement (invoice, plays) {
+  const USDformat = getUSDFormat();
+  let data = createData(invoice, plays);
+  let result = getHTMLResult(data, USDformat);
+  return result;
+}
+
 module.exports = {
   statement,
+  htmlStatement
 };
