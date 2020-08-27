@@ -61,15 +61,20 @@ function createData(invoice, plays) {
     return data;
 }
 
+function getTEXTResult(data, format){
+    let result = `Statement for ${data.customer}\n`;
+    for (let performance of data.performanceList) {
+        result += ` ${performance.name}: ${format(performance.amount / 100)} (${performance.audience} seats)\n`;
+    }
+    result += `Amount owed is ${format(data.totalAmount / 100)}\n`;
+    result += `You earned ${data.volumeCredits} credits \n`;
+    return result;
+}
+
 function statement (invoice, plays) {
   const USDformat = getUSDFormat();
   let data = createData(invoice, plays);
-  let result = `Statement for ${data.customer}\n`;
-  for (let performance of data.performanceList) {
-    result += ` ${performance.name}: ${USDformat(performance.amount / 100)} (${performance.audience} seats)\n`;
-  }
-  result += `Amount owed is ${USDformat(data.totalAmount / 100)}\n`;
-  result += `You earned ${data.volumeCredits} credits \n`;
+  let result = getTEXTResult(data, USDformat);
   return result;
 }
 
